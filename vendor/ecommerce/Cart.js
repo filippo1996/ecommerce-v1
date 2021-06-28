@@ -24,12 +24,14 @@ export default class Cart {
     {
         id = +id;
         const cart = this.products?.filter(obj => obj.id === id);
-        if(cart[0].qty){
-            cart[0].qty++;
+        let index = this.cart.findIndex(e => e?.id === id);
+
+        if(this.cart[index]?.qty){
+            this.cart[index].qty++;
             return;
         }
-        cart[0].qty = this.qty;
         this.cart.push(...cart);
+        this.cart[this.cart.length - 1].qty = this.qty;
     }
 
     /**
@@ -55,6 +57,10 @@ export default class Cart {
         return totalQty;
     }
 
+    /**
+     * 
+     * @returns {number}
+     */
     getTotalPrice()
     {
         let totalPrice = 0;
@@ -62,6 +68,20 @@ export default class Cart {
             totalPrice += this.cart[i].price * this.cart[i].qty;
         }
         return totalPrice;
+    }
+
+
+    deleteCart(id)
+    {
+        id = +id;
+        //let index = this.cart.findIndex(e => e?.id === id);
+        //this.cart.splice(index, 1); 
+        //l problema splice()è che l'elemento viene rimosso dall'array sposta anche tutti gli altri elementi verso il basso di uno.
+        // Sarebbe meglio usare filter():
+        this.cart = this.cart.filter(e => e.id !== id);
+        //Applicare un controllo booleano
+        console.log(this.cart);
+        return true;
     }
 
 }

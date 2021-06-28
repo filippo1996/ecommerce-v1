@@ -18,7 +18,6 @@ const items = [
 //Instanziamo la classe cart
 const cart = new Cart(items);
 
-
 /**
  * oggetto di configurazione dell'app
  */
@@ -87,6 +86,8 @@ function showBoxItemCart(id){
             return;
         }
     });
+    
+    //console.log(item);
     if(item.qty === 1){
         listCart.innerHTML += 
         `<li class="list margin-bottom">
@@ -95,8 +96,12 @@ function showBoxItemCart(id){
                 <p>${item.name}<p>
                 <span>Prezzo ${conf.priceFixed(item.price)}&euro;<span>
                 <p data-id="${item.id}">Quantità: ${item.qty}<p>
+                <button data-delete-id="${item.id}">Elimina</button>
             </div>
         </li>`;
+        //Mettiamo in ascolto l'evento del pulsante per eliminare il prodotto dal carrello
+        deleteProductCart();
+
         return;
     }
     document.querySelector('[data-id ="' + item.id + '"]').innerHTML = 'Quantità: ' + item.qty;
@@ -109,4 +114,18 @@ function showInfoCart(){
     //Mostriamo e stampiamo sulla modal carrello il prezzo totale
     const totalPrice = document.getElementById('total-price');
     totalPrice.innerHTML = `(Totale ${conf.priceFixed(cart.getTotalPrice())}&euro;)`;
+}
+
+
+function deleteProductCart(){
+    const btnDelete = document.querySelectorAll('[data-delete-id]');
+    btnDelete.forEach(ele => {
+        ele.addEventListener('click', e => {
+            const id = e.target.getAttribute('data-delete-id');
+            const status = cart.deleteCart(id);
+            if(status){
+                e.target.parentElement.parentElement.parentElement.remove();
+            }
+        });
+    });
 }
